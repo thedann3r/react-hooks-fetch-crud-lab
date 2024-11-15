@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import NewQuestionForm from "./QuestionForm";
+import QuestionForm from "./QuestionForm";
 import QuestionItem from "./QuestionItem"
 
 function QuestionList() {
@@ -31,7 +31,7 @@ function QuestionList() {
   return (
     <section>
       <h1>Question List</h1>
-      <NewQuestionForm onAddQuestion={handleAddQuestion} />
+      <QuestionForm onAddQuestion={handleAddQuestion} />
       <ul>
         {questions.map((question) => (
           <QuestionItem

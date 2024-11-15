@@ -27,33 +27,39 @@ test("displays question prompts after fetching", async () => {
 test("creates a new question when the form is submitted", async () => {
   render(<App />);
 
-  // wait for first render of list (otherwise we get a React state warning)
+  // Wait for initial list to render
   await screen.findByText(/lorem testum 1/g);
 
-  // click form page
+  // Navigate to the new question form
   fireEvent.click(screen.queryByText("New Question"));
 
-  // fill out form
-  fireEvent.change(screen.queryByLabelText(/Prompt/), {
+  // Fill out the form
+  fireEvent.change(screen.getByLabelText(/Prompt:/), {
     target: { value: "Test Prompt" },
   });
-  fireEvent.change(screen.queryByLabelText(/Answer 1/), {
+  fireEvent.change(screen.getByLabelText(/Answer 1:/), {
     target: { value: "Test Answer 1" },
   });
-  fireEvent.change(screen.queryByLabelText(/Answer 2/), {
+  fireEvent.change(screen.getByLabelText(/Answer 2:/), {
     target: { value: "Test Answer 2" },
   });
-  fireEvent.change(screen.queryByLabelText(/Correct Answer/), {
+  fireEvent.change(screen.getByLabelText(/Answer 3:/), {
+    target: { value: "Test Answer 3" },
+  });
+  fireEvent.change(screen.getByLabelText(/Answer 4:/), {
+    target: { value: "Test Answer 4" },
+  });
+  fireEvent.change(screen.getByLabelText(/Correct Answer:/), {
     target: { value: "1" },
   });
 
-  // submit form
-  fireEvent.submit(screen.queryByText(/Add Question/));
+  // Submit the form
+  fireEvent.submit(screen.getByText(/Add Question/));
 
-  // view questions
-  fireEvent.click(screen.queryByText(/View Questions/));
+  // Return to the question list to verify the new question appears
+  fireEvent.click(screen.getByText(/View Questions/));
 
-  expect(await screen.findByText(/Test Prompt/g)).toBeInTheDocument();
+  expect(await screen.findByText(/Test Prompt/)).toBeInTheDocument();
   expect(await screen.findByText(/lorem testum 1/g)).toBeInTheDocument();
 });
 
@@ -82,13 +88,13 @@ test("updates the answer when the dropdown is changed", async () => {
 
   await screen.findByText(/lorem testum 2/g);
 
-  fireEvent.change(screen.queryAllByLabelText(/Correct Answer/)[0], {
+  fireEvent.change(screen.queryAllByLabelText(/Correct Answer:/)[0], {
     target: { value: "3" },
   });
 
-  expect(screen.queryAllByLabelText(/Correct Answer/)[0].value).toBe("3");
+  expect(screen.queryAllByLabelText(/Correct Answer:/)[0].value).toBe("3");
 
   rerender(<App />);
 
-  expect(screen.queryAllByLabelText(/Correct Answer/)[0].value).toBe("3");
+  expect(screen.queryAllByLabelText(/Correct Answer:/)[0].value).toBe("3");
 });
