@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function QuestionForm({questions, setQuestions}) {
+function QuestionForm({ addQuestion }) {
   const [formData, setFormData] = useState({
     prompt: "",
     answer1: "",
@@ -8,27 +8,35 @@ function QuestionForm({questions, setQuestions}) {
     answer3: "",
     answer4: "",
     correctIndex: 0,
-  });
+  })
 
-  function handleChange(event) {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [event.target.name]: event.target.value,
-    });
+      [e.target.name]: e.target.value,
+    })
   }
 
-  function handleSubmit(e){
+  const handleSubmit = (e) => {
     e.preventDefault()
-    fetch("http://localhost:4000/questions", {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify(formData)
+
+    const newQuestion = {
+      id: Date.now(), 
+      prompt: formData.prompt,
+      answers: [formData.answer1, formData.answer2, formData.answer3, formData.answer4],
+      correctIndex: formData.correctIndex,
+    }
+
+    addQuestion(newQuestion);
+
+    setFormData({
+      prompt: "",
+      answer1: "",
+      answer2: "",
+      answer3: "",
+      answer4: "",
+      correctIndex: 0,
     })
-    .then(res => res.json())
-    .then(que => {setQuestions([...questions,que])})
-    .catch(err => console.log(err))
   }
 
   return (
@@ -96,7 +104,7 @@ function QuestionForm({questions, setQuestions}) {
         <button type="submit">Add Question</button>
       </form>
     </section>
-  );
+  )
 }
 
 export default QuestionForm;
